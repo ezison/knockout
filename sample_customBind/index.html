@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="no-cache" http-equiv="Pragma">
+    <meta content="no-store" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="Mon, 26 Jul 1997 05:00:00 GMT" http-equiv="Expires">
+    <meta content="width=device-width, initial-scale=1, minimum-scale = 1.0, maximum-scale = 1.0, user-scalable = no" name="viewport">
+
+    <title>Knockout Sample</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <style type="text/css">
+
+    </style>
+
+    <script type="text/javascript">
+
+        var _viewModel = null;
+
+        $(function() {
+
+            /*
+             * カスタムバインディングの登録
+             * 初回に一度だけ実行する
+             */
+            // jQueryの slideDown / slideUp による表示・非表示の制御
+            ko.bindingHandlers.slideVisible = {
+                init: function(element, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor()); // Get the current value of the current property we're bound to
+                    $(element).toggle(value); // jQuery will hide/show the element depending on whether "value" or true or false
+                },
+                update: function(element, valueAccessor, allBindings) {
+                    // First get the latest data that we're bound to
+                    var value = valueAccessor();
+
+                    // Next, whether or not the supplied model property is observable, get its current value
+                    var valueUnwrapped = ko.unwrap(value);
+
+                    // Grab some more data from another binding property
+                    var duration = allBindings.get('slideDuration') || 400; // 400ms is default duration unless otherwise specified
+
+                    // Now manipulate the DOM element
+                    if (valueUnwrapped == true)
+                        $(element).slideDown(duration); // Make the element visible
+                    else
+                        $(element).slideUp(duration);   // Make the element invisible
+                }
+            };
+
+            // jQueryの fadeIn / fadeOut による表示・非表示の制御
+            ko.bindingHandlers.fadeVisible = {
+                init: function(element, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor()); // Get the current value of the current property we're bound to
+                    $(element).toggle(value); // jQuery will hide/show the element depending on whether "value" or true or false
+                },
+                update: function(element, valueAccessor, allBindings) {
+                    // First get the latest data that we're bound to
+                    var value = valueAccessor();
+
+                    // Next, whether or not the supplied model property is observable, get its current value
+                    var valueUnwrapped = ko.unwrap(value);
+
+                    // Grab some more data from another binding property
+                    var duration = allBindings.get('fadeDuration') || 400; // 400ms is default duration unless otherwise specified
+
+                    // Now manipulate the DOM element
+                    if (valueUnwrapped == true)
+                        $(element).fadeIn(duration); // Make the element visible
+                    else
+                        $(element).fadeOut(duration);   // Make the element invisible
+                }
+            };
+            /*
+             * ↑↑　カスタムバインディングの登録
+             */
+
+            var beforeApplyBindings = function(viewModel) {
+
+                // （ko.computedなどを用いて）複数のデータを組み合わせて表示を行う場合に
+                // ko.applyBindings実行前に、viewModelにプロパティを追加する必要があるため
+                // beforeApplyBindingsコールバック（本ブロック）で処理を実行する
+
+            };
+
+            // submitボタン押下時に、フォームの内容を出力する
+            $(document).on("click", "#loadDataButton", function() {
+
+                var data = $("[name=loadData]").val();
+                var dataObj = JSON.parse(data);
+                // ビューにデータをバインドする
+                _viewModel = ko_applyBindingsExt(_viewModel, dataObj, $("#form").get(0), beforeApplyBindings);
+            });
+
+            // submitボタン押下時に、フォームの内容を出力する
+            $(document).on("click", "#submit", function() {
+                $("[name=submitData]").text($("#form").serialize());
+            });
+
+            
+
+        });
+
+        /**
+         * 本メソッドはユーティリティ関数として共通化しておく
+         */
+        function ko_applyBindingsExt(viewModel, data, element, beforeApplyBindings) {
+
+            if (viewModel === null) {
+                // 初期化処理
+
+                // データ情報をknockoutのobservableに変換する
+                viewModel = ko.mapping.fromJS(data);
+
+                if (beforeApplyBindings) {
+                    beforeApplyBindings(viewModel);
+                }
+
+                // ビューモデルを特定の要素に適用する（この処理は一度だけで良い）
+                ko.applyBindings(viewModel, element);
+
+            } else {
+
+                // ビューモデルを更新する
+                ko.mapping.fromJS(data, viewModel);
+            }
+
+            return viewModel;
+        }
+
+    </script>
+
+</head>
+<body>
+    <div class="container-fluid">
+
+        <div style="margin: 2em 2em">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Knockout JS ロードデータ（Json）
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-2 control-label">Json</label>
+                    <div class="col-xs-10">
+                        <textarea class="form-control" name="loadData" value="" rows="15">
+{
+  "visibleTest": false
+}
+                        </textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-10 col-xs-offset-2">
+                        <br />
+                        <button id="loadDataButton" type="button" class="btn btn-primary">Load Data ↓↓↓</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 以下のイディオムをDOMに適用することで、knockoutのバインドが適用されるまでは要素が非表示になるため、中間状態をユーザーに隠すことができる -->
+        <!-- data-bind="visible: true" style="display: none;" -->
+        <form id="form"
+            accept-charset="utf-8"
+            action=""
+            method="post"
+            class="form-horizontal"
+            data-bind="visible: true" style="display: none;"
+        >
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Knockout JS サンプルフォーム
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">表示・非表示</label>
+                        <div class="col-xs-10">
+                            <div class="form-control-static">
+                                <input name="visibleTest" type="checkbox" value="visible" data-bind="checked: visibleTest" />&nbsp;&nbsp;
+                                <span data-bind="slideVisible: visibleTest">チェックされたら表示されます</span>
+                                &nbsp;&nbsp;
+                                <span data-bind="fadeVisible: visibleTest">チェックされたら表示されます</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-10 col-xs-offset-2">
+                            <button id="submit" type="button" class="btn btn-primary">Submit Data ↓↓↓</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-10 col-xs-offset-2">
+                            <p class="form-control" name="submitData" rows="5"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        </div>
+
+    </div>
+</body>
+</html>
