@@ -66,7 +66,7 @@
                 var data = $("[name=loadData]").val();
                 var dataObj = JSON.parse(data);
                 // ビューにデータをバインドする
-                _viewModel = bindData(_viewModel, dataObj, $("#form").get(0), beforeApplyBindings);
+                _viewModel = ko_applyBindingsExt(_viewModel, dataObj, $("#form").get(0), beforeApplyBindings);
             });
 
             // submitボタン押下時に、フォームの内容を出力する
@@ -77,9 +77,9 @@
         });
 
         /**
-         * 本メソッドはユーティリティ関数として共通化しておくと良い
+         * 本メソッドはユーティリティ関数として共通化しておく
          */
-        function bindData(viewModel, data, element, beforeApplyBindings) {
+        function ko_applyBindingsExt(viewModel, data, element, beforeApplyBindings) {
 
             if (viewModel === null) {
                 // 初期化処理
