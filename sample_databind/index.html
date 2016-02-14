@@ -127,6 +127,16 @@
 , "checkbox2": false
 , "radio": "2"
 , "select": 3
+, "selectList": [
+    {"selectListText": "t1", "selectListValue": "v1"}, 
+    {"selectListText": "t2", "selectListValue": "v2"}, 
+    {"selectListText": "t3", "selectListValue": "v3"}, 
+    {"selectListText": "t4", "selectListValue": "v4"}, 
+    {"selectListText": "t5", "selectListValue": "v5"}, 
+    {"selectListText": "t6", "selectListValue": "v6"}
+]
+, "selectListValue": "v2"
+, "selectListsValue": ["v4", "v6"]
 , "staticText": "<strong>Static Text</strong>"
 , "htmlText": "<strong>Html Text</strong>"
 , "visibleTest": false
@@ -196,6 +206,30 @@
                         <label class="col-xs-2 control-label">セレクトボックス</label>
                         <div class="col-xs-10">
                             <select class="form-control" name="select" data-bind="value: select">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">セレクトボックス（option生成）</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" name="selectList" data-bind="options: selectList, optionsText: 'selectListText', optionsValue: 'selectListValue', optionsCaption: '-選択してください-', value: selectListValue">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">セレクトボックス（複数選択）</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" name="selectList" data-bind="options: selectList, optionsText: 'selectListText', optionsValue: 'selectListValue', optionsCaption: '-選択してください-', selectedOptions: selectListsValue" multiple size="10">
                               <option>1</option>
                               <option>2</option>
                               <option>3</option>
