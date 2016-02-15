@@ -266,7 +266,10 @@
                             </div>
                             <div data-bind="foreach: {data: foreachNestList}">
 
-                                <div style="margin-bottom: .5em;" class="foreachNestRecord" data-bind="attr: {index: $index}">
+                                <div class="foreachNestRecord"
+                                    style="margin-bottom: .5em;"
+                                    data-bind="attr: {index: $index}">
+                                    
                                     <input name="foreachNestText1" type="text" value="" class="form-control" style="display: inline-block; width: 40%;" 
                                         data-bind="value: foreachNestText1,
                                                     attr: {name: 'foreachNestList[' + $index() + '][foreachNestText1]'}" />
@@ -280,7 +283,11 @@
                                     </div>
 
                                     <div data-bind="foreach: {data: nestList ? nestList : []}">
-                                        <div style="margin-bottom: .5em; margin-left: 2em;" class="foreachNestNestRecord" data-bind="attr: {index: $index}">
+
+                                        <div class="foreachNestNestRecord"
+                                            style="margin-bottom: .5em; margin-left: 2em;"
+                                            data-bind="attr: {index: $index}">
+
                                             <input name="nestText1" type="text" value="" class="form-control" style="display: inline-block; width: 20%;" 
                                                 data-bind="value: nestText1,
                                                             attr: {name: 'foreachNestList[' + $parentContext.$index() + '][' + $index() + '][nestText1]'}" />
@@ -288,6 +295,7 @@
                                                 data-bind="value: nestText2,
                                                             attr: {name: 'foreachNestList[' + $parentContext.$index() + '][' + $index() + '][nestText2]'}" />
                                             <button type="button" class="foreachNestNestDel btn btn-default">削除</button>
+
                                         </div>
                                     </div>
 
